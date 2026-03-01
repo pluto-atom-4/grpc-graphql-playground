@@ -142,26 +142,48 @@ cd graphql && go run github.com/99designs/gqlgen generate && cd ..
 cd frontend && pnpm run codegen && cd ..
 ```
 
-### 3. Run Services
+### 3. Run Services with Docker Compose
 ```bash
-# Start Redpanda (Kafka), Python service, GraphQL gateway
+# Start all backend services: Redpanda, Python recommender, Go GraphQL gateway
 docker-compose up -d
 
-# Start frontend dev server
+# View logs from all services
+docker-compose logs -f
+
+# View logs from a specific service
+docker-compose logs -f recommender
+docker-compose logs -f graphql-gateway
+docker-compose logs -f redpanda
+
+# Start frontend dev server (separate terminal)
 cd frontend
 pnpm dev
 # Frontend runs on http://localhost:3000
 ```
 
-### 4. Verify
+### 4. Verify Services
 ```bash
-# Check gRPC recommender service is running
-curl http://localhost:8081/healthz
+# Check Redpanda (Kafka) health
+curl http://localhost:8081/healthz || echo "Redpanda not ready"
 
 # Check GraphQL gateway is running
-curl http://localhost:8080/graphql
+curl -X POST http://localhost:8080/graphql \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ recommendations(userId: \"test\", limit: 5) { id name score } }"}'
 
 # Frontend should load on http://localhost:3000
+
+# Check all services are running
+docker-compose ps
+```
+
+### 5. Stop Services
+```bash
+# Stop all services
+docker-compose down
+
+# Stop services and remove data volumes
+docker-compose down -v
 ```
 
 ---
@@ -323,21 +345,102 @@ Run: `cd recommender && uv sync` to update dependencies
 ### Go build fails with proto errors
 Run: `buf generate -C recommender` to regenerate bindings
 
-### Docker Compose fails to start Redpanda
-Check Docker is running: `docker ps`
-Check disk space: `df -h`
+### Docker Compose Issues
 
-### Frontend won't load recommendations
-- Check GraphQL gateway is running: `curl http://localhost:8080/graphql`
-- Check Recommender service is running: `docker-compose ps`
-- Check browser console for GraphQL errors
+#### Redpanda won't start
+```bash
+# Check Docker is running
+docker ps
 
-### Port already in use (8080, 8081, 3000)
+# Check disk space
+df -h
+
+# View Redpanda logs
+docker-compose logs redpanda
+
+# Restart Redpanda
+docker-compose restart redpanda
+
+# Full rebuild
+docker-compose down -v
+docker-compose up -d
+```
+
+#### Recommender service won't connect to Kafka
+```bash
+# Check service is running
+docker-compose ps recommender
+
+# View logs
+docker-compose logs recommender
+
+# Verify Kafka broker is accessible
+docker-compose exec recommender nc -zv redpanda 29092
+```
+
+#### GraphQL gateway can't connect to gRPC recommender
+```bash
+# Check service is running
+docker-compose ps graphql-gateway
+
+# View logs
+docker-compose logs graphql-gateway
+
+# Check network connectivity
+docker-compose exec graphql-gateway nc -zv recommender 50051
+```
+
+#### Database file permissions
+```bash
+# Ensure data directory is writable
+chmod -R 755 ./recommender/data
+
+# Check ownership
+ls -la ./recommender/data/
+```
+
+### Frontend Issues
+
+#### Frontend won't load recommendations
+```bash
+# Check GraphQL gateway is running
+curl -X POST http://localhost:8080/graphql \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ recommendations(userId: \"test\") { id name } }"}'
+
+# Check all services are running
+docker-compose ps
+
+# View frontend logs
+cd frontend && pnpm dev
+# Check browser console for GraphQL errors
+```
+
+#### Port already in use (8080, 8081, 3000)
 ```bash
 # Find process using port:
 lsof -i :8080
 
 # Kill process or use different port in docker-compose.yml
+# Example: Change 8080:8080 to 8090:8080 in docker-compose.yml
+```
+
+### Clean Reset
+```bash
+# Stop and remove all containers, volumes, and networks
+docker-compose down -v
+
+# Remove local database
+rm -f ./recommender/data/*.db
+
+# Rebuild everything
+docker-compose up -d
+
+# Check services are healthy
+docker-compose ps
+
+# View combined logs
+docker-compose logs -f
 ```
 
 ---
