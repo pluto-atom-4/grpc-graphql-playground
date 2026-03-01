@@ -1,0 +1,15 @@
+version: v2
+
+plugins:
+  - plugin: go
+    out: generated/pb
+    opt:
+      - paths=source_relative
+  - plugin: go-grpc
+    out: generated/pb
+    opt:
+      - paths=source_relative
+  - plugin: python
+    out: generated/pb
+  - plugin: grpc-python
+    out: generated/pb

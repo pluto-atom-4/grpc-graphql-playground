@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # Redpanda: Kafka-compatible event streaming
+  redpanda:
+    image: docker.redpanda.com/redpanda:latest
+    container_name: redpanda
+    ports:
+      - "8081:8081"      # REST API
+      - "8082:8082"      # Pandaproxy
+      - "29092:29092"    # Kafka broker (internal)
+      - "9092:9092"      # Kafka broker (external)
+    command:
+      - redpanda
+      - start
+      - --smp=1
+      - --memory=1G
+      - --reserve-memory=0M
+      - --overprovisioned
+      - --advertised-kafka-api=redpanda:29092
+    healthcheck:
+      test: ["CMD", "redpanda", "admin", "brokers", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  # Python Recommender Service
+  recommender:
+    build:
+      context: .
+      dockerfile: recommender/Dockerfile
+    container_name: recommender
+    ports:
+      - "50051:50051"    # gRPC
+    environment:
+      DATABASE_URL: sqlite:///./data/recommender.db
+      KAFKA_BROKERS: redpanda:29092
+      KAFKA_TOPIC: user-events
+      GRPC_HOST: 0.0.0.0
+      GRPC_PORT: 50051
+    depends_on:
+      redpanda:
+        condition: service_healthy
+    volumes:
+      - ./recommender/data:/app/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Go GraphQL Gateway
+  graphql-gateway:
+    build:
+      context: graphql
+      dockerfile: Dockerfile
+    container_name: graphql-gateway
+    ports:
+      - "8080:8080"      # HTTP GraphQL
+    environment:
+      RECOMMENDER_GRPC_ADDR: recommender:50051
+      ENVIRONMENT: development
+    depends_on:
+      - recommender
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  recommender_data:
+    driver: local

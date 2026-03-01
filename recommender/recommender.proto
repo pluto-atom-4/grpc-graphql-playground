@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package recommender;
+
+option go_package = "github.com/pluto-atom-4/grpc-graphql-playground/recommender/generated/pb;pb";
+option java_multiple_files = true;
+option java_package = "com.example.recommender";
+
+// RecommenderService provides travel recommendations and event processing
+service RecommenderService {
+  // GetRecommendations returns personalized travel recommendations
+  rpc GetRecommendations(RecommendationRequest) returns (RecommendationResponse) {}
+
+  // RecordEvent processes a user event (view, click, book, etc.)
+  rpc RecordEvent(EventRequest) returns (EventResponse) {}
+}
+
+// RecommendationRequest specifies user and limits for recommendations
+message RecommendationRequest {
+  string user_id = 1;
+  int32 limit = 2;
+}
+
+// RecommendationResponse contains a list of recommended destinations
+message RecommendationResponse {
+  repeated Destination destinations = 1;
+}
+
+// Destination represents a travel destination with metadata and recommendation score
+message Destination {
+  string id = 1;
+  string name = 2;
+  string region = 3;
+  string country = 4;
+  string description = 5;
+  float latitude = 6;
+  float longitude = 7;
+  float score = 8;  // Recommendation score (0.0 to 1.0)
+}
+
+// EventRequest represents a user event to be processed
+message EventRequest {
+  string user_id = 1;
+  string destination_id = 2;
+  string event_type = 3;  // "view", "click", "book", "rate"
+  int32 rating = 4;       // Optional rating (1-5)
+  int64 timestamp = 5;    // Unix timestamp in milliseconds
+}
+
+// EventResponse indicates success or failure of event processing
+message EventResponse {
+  bool success = 1;
+  string message = 2;
+}

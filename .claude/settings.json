@@ -1,0 +1,17 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "commands": {
+    "proto-gen": "cd recommender && buf generate",
+    "graphql-gen": "cd graphql && go run github.com/99designs/gqlgen generate",
+    "test-go": "go test ./...",
+    "test-py": "cd recommender && uv run pytest",
+    "test-e2e": "cd frontend && pnpm exec playwright test",
+    "dev-all": "docker-compose up -d",
+    "lint-go": "golangci-lint run",
+    "lint-py": "cd recommender && uv run ruff check --fix . && uv run ruff format .",
+    "lint-frontend": "cd frontend && pnpm run lint",
+    "validate-compose": "bash .claude/skills/validate-compose/validate-compose.sh"
+  }
+}

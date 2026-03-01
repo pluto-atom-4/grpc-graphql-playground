@@ -1,0 +1,17 @@
+schema:
+  - schema.graphql
+
+exec:
+  filename: graph/generated.go
+  package: graph
+
+# Override model types with our own
+models:
+  Query:
+    model: github.com/pluto-atom-4/grpc-graphql-playground/graphql/graph.Resolver
+  Mutation:
+    model: github.com/pluto-atom-4/grpc-graphql-playground/graphql/graph.Resolver
+  Destination:
+    model: github.com/pluto-atom-4/grpc-graphql-playground/graphql/graph.Destination
+  EventResponse:
+    model: github.com/pluto-atom-4/grpc-graphql-playground/graphql/graph.EventResponse
