@@ -90,3 +90,4 @@ docker-compose.override.yml
 # OS specific files
 .DS_Store
 Thumbs.db
+_backup_unwanted_dir/
