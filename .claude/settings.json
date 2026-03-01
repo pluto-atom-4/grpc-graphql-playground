@@ -11,6 +11,7 @@
     "dev-all": "docker-compose up -d",
     "lint-go": "golangci-lint run",
     "lint-py": "cd recommender && uv run ruff check --fix . && uv run ruff format .",
-    "lint-frontend": "cd frontend && pnpm run lint"
+    "lint-frontend": "cd frontend && pnpm run lint",
+    "validate-compose": "bash .claude/skills/validate-compose/validate-compose.sh"
   }
 }
