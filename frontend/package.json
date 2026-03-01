@@ -1,0 +1,41 @@
+{
+  "name": "grpc-graphql-playground-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "codegen": "graphql-codegen"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "next": "^14.0.0",
+    "urql": "^4.0.0",
+    "graphql": "^16.8.0",
+    "graphql-request": "^6.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/node": "^20.0.0",
+    "vitest": "^1.0.0",
+    "@testing-library/react": "^14.0.0",
+    "playwright": "^1.40.0",
+    "@playwright/test": "^1.40.0",
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "next-env": "^3.3.7",
+    "eslint": "^8.54.0",
+    "eslint-config-next": "^14.0.0",
+    "@tailwindcss/forms": "^0.5.6",
+    "tailwindcss": "^3.3.0",
+    "postcss": "^8.4.32"
+  }
+}

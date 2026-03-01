@@ -1,0 +1,23 @@
+schema:
+  - schema.graphql
+
+exec:
+  filename: graph/generated/generated.go
+  package: generated
+
+resolver:
+  filename: graph/resolver.go
+  type: Resolver
+  layout: follow-schema
+  dir_name: graph
+
+model:
+  filename: graph/model/models_gen.go
+  package: model
+
+autobind:
+  - github.com/pluto-atom-4/grpc-graphql-playground/graphql/graph/model
+
+directives:
+  constraint:
+    skip_runtime: true

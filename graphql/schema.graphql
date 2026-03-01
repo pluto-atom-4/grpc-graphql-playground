@@ -1,0 +1,27 @@
+scalar DateTime
+
+type Query {
+  recommendations(userId: String!, limit: Int): [Destination!]!
+  destination(id: String!): Destination
+  destinations: [Destination!]!
+}
+
+type Mutation {
+  recordEvent(userId: String!, destinationId: String!, eventType: String!, rating: Int): EventResponse!
+}
+
+type Destination {
+  id: String!
+  name: String!
+  region: String!
+  country: String!
+  description: String
+  latitude: Float
+  longitude: Float
+  score: Float!
+}
+
+type EventResponse {
+  success: Boolean!
+  message: String!
+}
