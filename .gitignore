@@ -1,0 +1,92 @@
+# Go binaries and build artifacts
+*.o
+*.a
+*.so
+.DS_Store
+/bin/
+/dist/
+*.exe
+*.dll
+*.dylib
+*.test
+
+# Go module cache
+/vendor/
+go.sum
+
+# Go workspace file
+go.work.sum
+
+# Python virtual environments and cache
+venv/
+env/
+ENV/
+.venv
+.env
+*.egg-info/
+dist/
+build/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Node.js and npm
+node_modules/
+npm-debug.log
+yarn-error.log
+pnpm-lock.yaml
+.pnpm-debug.log
+
+# Next.js build output
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.turbo/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+recommender/app/db/*.db
+recommender/app/db/*.sqlite3
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.sublime-project
+.sublime-workspace
+*.code-workspace
+.DS_Store
+Thumbs.db
+
+# Generated protobuf files
+recommender/generated/
+*.pb.go
+*_pb2.py
+*_pb2_grpc.py
+
+# Claude Code cache
+.claude/
+
+# Docker volumes and artifacts
+.dockerignore
+docker-compose.override.yml
+
+# OS specific files
+.DS_Store
+Thumbs.db
