@@ -1,7 +1,5 @@
-scalar DateTime
-
 type Query {
-  recommendations(userId: String!, limit: Int): [Destination!]!
+  recommendations(userId: String!, limit: Int = 10): [Destination!]!
   destination(id: String!): Destination
   destinations: [Destination!]!
 }

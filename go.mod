@@ -3,6 +3,7 @@ module github.com/pluto-atom-4/grpc-graphql-playground
 go 1.22
 
 require (
+	github.com/graphql-go/graphql v0.8.1
 	google.golang.org/grpc v1.50.0
 	google.golang.org/protobuf v1.30.0
 )
